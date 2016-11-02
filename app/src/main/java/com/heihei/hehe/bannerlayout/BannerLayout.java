@@ -59,7 +59,7 @@ public class BannerLayout extends FrameLayout {
         @Override
         public void run() {
             viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-            handler.postDelayed(this,5000);
+            handler.postDelayed(this,4000);
         }
     };
 
