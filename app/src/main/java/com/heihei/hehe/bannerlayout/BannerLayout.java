@@ -222,7 +222,9 @@ public class BannerLayout extends FrameLayout {
         super.onWindowVisibilityChanged(visibility);
     }
     // 内置适配器
-    private class BannerAdapter extends PagerAdapter {private SparseArray<ImageView> imgs = new SparseArray<>();
+    private class BannerAdapter extends PagerAdapter {
+
+        private SparseArray<ImageView> imgs = new SparseArray<>();
 
         @Override
         public int getCount() {
@@ -236,23 +238,25 @@ public class BannerLayout extends FrameLayout {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            final int p = position % datas.size();
-            ImageView imageView = imgs.get(p);
+            // 解决数据长度为2时左滑出现空白的问题
+            final int realPosition = position % datas.size();
+            int index = position % (datas.size() * (datas.size() == 2 ? 2 : 1));
+            ImageView imageView = imgs.get(index);
             if(imageView == null){
                 imageView = new ImageView(container.getContext());
                 imageView.setLayoutParams(new ViewPager.LayoutParams());
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imgs.put(p,imageView);
+                imgs.put(index,imageView);
                 imageView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(onPagerClickListener != null){
-                            onPagerClickListener.onClick(datas.get(p));
+                            onPagerClickListener.onClick(datas.get(realPosition));
                         }
                     }
                 });
             }
-            Glide.with(container.getContext()).load(datas.get(p).getUrl()).placeholder(R.mipmap.ic_launcher).into(imageView);
+            Glide.with(container.getContext()).load(datas.get(realPosition).getUrl()).placeholder(R.mipmap.ic_launcher).into(imageView);
             ViewParent parent = imageView.getParent();
             if(parent != null){
                 ((ViewGroup)parent).removeView(imageView);
